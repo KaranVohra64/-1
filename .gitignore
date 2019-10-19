@@ -1,0 +1,8 @@
+images/
+lib/
+
+*.tmp
+*.swp
+
+.*
+!/.gitignore

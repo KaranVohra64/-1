@@ -1,0 +1,82 @@
+.t-wrapper {
+
+	display: inline-block;
+	position: relative;
+
+	height: 500px;
+	max-height: 500px;
+
+	padding: 20px;
+
+	overflow-y: scroll;
+
+	border-style: outset;
+	border-width: 5px;
+	border-radius: 25px;
+
+	background: black;
+
+	font-family: Inconsolata, monospace;
+}
+
+.t-wrapper::-webkit-scrollbar { 
+	width: 0 !important;
+}
+
+.t-wrapper { 
+	overflow: -moz-scrollbars-none; 
+}
+
+.def-state {
+	color: #e2ffde;
+	text-shadow: 0px 0px 5px #1be300;
+}
+
+.active {
+	color: #ffda75;
+    	text-shadow: 0px 0px 5px #ffbb00;
+}
+
+.t-init {
+	position: relative;
+	/*width: 100%;*/
+
+	border-collapse: collapse;
+}
+
+/*DATA TABLE*/
+
+#t-list tr {
+	height: 20px;
+
+	text-align: left;
+	padding: 2px 5px;
+}
+
+#t-list tr td{
+	text-indent: 10px;
+	cursor: pointer;
+}
+
+#t-list tr td:hover {
+	text-shadow: 0px 0px 5px #fff;
+}
+
+#t-list tr th{
+	color: #e2ffde;
+	text-shadow: 0px 0px 5px #1be300;
+}
+
+
+/*DATA TABLE*/
+
+#d-dyn {
+	min-width: 600px;
+}
+
+#t-data tr th {
+	height: 20px;
+
+	text-align: left;
+	padding: 5px 25px 5px 0px;
+}
