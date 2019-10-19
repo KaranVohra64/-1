@@ -5,4 +5,3 @@ lib/
 *.swp
 
 .*
-!/.gitignore
