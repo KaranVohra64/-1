@@ -1,17 +1,19 @@
 .t-wrapper {
 
-	display: inline-block;
+	display: block;
 	position: relative;
 
-	height: 500px;
-	max-height: 500px;
+	height: 700px;
+	max-height: 700px;
 
 	padding: 20px;
 
-	overflow-y: scroll;
+	/*overflow-y: auto;*/
+	overflow: hidden;
 
 	border-style: outset;
 	border-width: 5px;
+	/*border-radius: 10% / 50%;*/
 	border-radius: 25px;
 
 	background: black;
@@ -71,12 +73,72 @@
 /*DATA TABLE*/
 
 #d-dyn {
-	min-width: 600px;
+	min-width: 1000px;
+	max-width: 1000px;
 }
 
-#t-data tr th {
+#t-data {
+	margin-left: 20px;
+}
+
+#t-data tr {
+	border-bottom: 2px dashed rgba(201,255,179,0.1);
+}
+
+#t-data tr td:not(:last-child), #t-data tr th:not(:last-child) {
+	border-right: 2px dotted rgba(201,255,179, 0.1);
+	border-bottom: 2px dashed rgba(201,255,179,0.1);
+}
+
+#t-data tr:nth-child(1) {
+        /*border-bottom: 2px dashed red;*/
+}
+
+#t-data tr td:nth-child(1) {
+	/*border-left: 2px dashed red;*/
+}
+
+#t-data tr th, #t-data tr td{
 	height: 20px;
-
 	text-align: left;
-	padding: 5px 25px 5px 0px;
+	padding: 2.5px 10px 2.5px 10px;
 }
+
+#t-data tr:not(:first-child):hover {
+        text-shadow: 0px 0px 5px #fff;
+}
+
+#t-data tr:first-child th {
+	position: sticky;
+	top: 0px;
+	background-image: linear-gradient(rgba(0,0,0,1), rgba(0, 0, 0, 0.9));
+	padding-top: 10px;
+	padding-bottom: 5px;
+	
+}
+
+
+.data-frame {
+	height: 700px;
+	width: 720px;	
+	display: inline-block;
+
+	border-color: rgba(0,255,0,0.3);
+	/*border-radius: 10% / 50%;*/
+	border-radius: 25px;
+	border-style: solid;
+	border-width: 4px;
+	/*padding: 0px 30px;*/
+	overflow-y: scroll;
+	overflow-x: auto;
+}
+
+.data-frame::-webkit-scrollbar {
+        width: 0 !important;
+}
+
+.data-frame {
+        overflow: -moz-scrollbars-none;
+}
+
+

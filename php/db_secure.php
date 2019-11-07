@@ -13,7 +13,7 @@
         }
 
         private function db_login() {
-            $f = fopen(".dbkey", "r") or die("Unable to open file!");
+            $f = fopen("/var/www/html/bin/.dbkey", "r") or die("Unable to open file!");
             $_pk = explode(" ", fgets($f));
             fclose($f);
 

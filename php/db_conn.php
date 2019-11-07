@@ -1,19 +1,19 @@
 <?php
 	class db_Conn {
 
-		private $conn;
+		protected $conn;
 		
 		public function __construct() {
 			$this->conn = $this->db_login();
 			//echo 'The class "' . __CLASS__ . '" was initiated!<br>';
 		}
 
-		public function __destruct(){ 
+		public function __destruct(){	
         		//echo 'The class "' . __CLASS__ . '" was destroyed!'; 
     		} 
 
 		private function db_login() {
-		    $f = fopen(".dbkey", "r") or die("Unable to open file!");
+		    $f = fopen("/var/www/html/bin/.dbkey", "r") or die("Unable to open file!");
                     $_pk = explode(" ", fgets($f));
                     fclose($f);  
 
@@ -21,17 +21,19 @@
 		    $username = $_pk[0];
 		    $password = str_replace(array("\n","\r"), '', $_pk[1]);
 
-		    $this->$conn = new mysqli($servername, $username, $password);
+		    $c = new mysqli($servername, $username, $password);
 
 		    // Check connection
-		    if ($this->$conn->connect_error) {
-		        die("Connection failed: " . $this->$conn->connect_error);
+		    if ($c->connect_error) {
+		        die("Connection failed: " . $c->connect_error);
+		    }else{
+			    return $c;
 		    }
 		}
 
 		private function get_tables($database_name) {
 		    $sql = "SHOW TABLES FROM " . $database_name;
-		    $result = mysqli_query($this->$conn,$sql);
+		    $result = mysqli_query($this->conn,$sql);
 		    if ($result->num_rows > 0) {
 		        return $result;
 		    }else {
@@ -39,38 +41,58 @@
 		    }
 		}
 
-		public function describe_table_names($database_name) {
-		    $table_names = $this->get_tables($database_name, $this->$conn);
-		    $t_name;
-		    
-		    if (!($table_names == null)) {
-			echo "<div class='t-wrapper'>";
-			echo "<table id='t-list' class='t-init'><tbody>";
-			echo "<tr><th>Table Names:</th></tr>";
+		private function get_databases() {
+			$sql = "SHOW DATABASES" . $database_name;
+                        $result = mysqli_query($this->conn,$sql);
+                        if ($result->num_rows > 0) {
+                        	return $result;
+                        }else {
+                        	return null;
+                        }
+		}
 
-			$trig = 1;
+		private function query_db($sql) {
+                        $result = mysqli_query($this->conn,$sql);
+                        if ($result->num_rows > 0) {
+                                return $result;
+                        } else {
+                                return null;
+                        }
+                }
+
+		public function get_last_id() {
+			return $this->conn->insert_id;
+		}
+
+		public function send_insert($stmnt) {
+			mysqli_query($this->conn,$stmnt);
+		}
+
+		public function describe_table_names($database_name) {
+		    $table_names = $this->get_tables($database_name);
+		    if (!($table_names == null)) {
 		        while ($row = mysqli_fetch_array($table_names)) {
-				if($trig == 0) {
-					echo "<tr class='def-state'>";
-				}else {
-					echo "<tr class='def-state active'>";
-					$trig = 0;
-					$t_name=$row[0];
-				}	     
-			        echo "<td> > " . $row[0] . "</td>";
-		                echo "</tr>";
-		        }
-			echo "</tbody></table>";
-			echo "</div>";
-			return $t_name;
+				echo "<div class='sys-ul-button'>" . $row[0] . "</div>";
+			}
 		    }else {
-		        echo "ERROR: no tables found";
+		        return "ERROR: no tables found";
 		    }
 		}
 
+		public function describe_database_names() {
+                    $database_names = $this->get_databases();
+		    if (!($database_names == null)) {
+			    while ($row = mysqli_fetch_array($database_names)) {
+                                echo "<div class='sys-ul-button'>" . $row[0] . "</div>";
+                        }
+                    }else {
+                        echo "ERROR: no tables found";
+                    }
+                }
+
 		private function get_table_headers($database_name, $table_name) {
 		    $sql = "SHOW COLUMNS FROM " . $database_name . "." . $table_name;
-		    $result = mysqli_query($this->$conn,$sql);
+		    $result = mysqli_query($this->conn,$sql);
 		    if ($result->num_rows > 0) {
 		        return $result;
 		    }else {
@@ -80,7 +102,7 @@
 
 		private function get_table_body($database_name, $table_name) {
 		    $sql = "SELECT * FROM " . $database_name . "." . $table_name;
-		    $result = $this->$conn->query($sql);
+		    $result = $this->conn->query($sql);
 
 		    if ($result->num_rows > 0) {
 		        return $result;
@@ -90,8 +112,7 @@
 
 		}
 
-		 public function describe_table($database_name, $table_name) {
-		    
+		 public function describe_table($database_name, $table_name) { 
 		    echo "<table id='t-data' class='t-init def-state'><tbody>";
 		    $headers = $this->get_table_headers($database_name, $table_name);
 
@@ -118,7 +139,24 @@
 		    }else {
 		        echo "ERROR: no body found";
 		    }
-		    echo "</tbody></table>";
+		    echo "</tbody></table>"; 
+		 }
+
+		public function render_query_results($sql) {
+			$raw = $this->query_db($sql);
+			if($raw != null) {
+				echo "<table id='t-data' class='t-init def-state'><tbody>";
+				while($row = $raw->fetch_assoc()) {
+                            		echo "<tr>";
+                            		foreach ($row as $key => $value) {
+                                		echo "<td>" . $value . "</td>";
+                            		}
+                            		echo "</tr>";
+				}
+				echo "</tbody></table>";
+			}else {
+				echo "No Results Found: " . $sql;
+			}
 		}
 	}
 ?>
